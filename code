@@ -33,9 +33,9 @@
         const tasks = [
             { description: 'Check announcements channel for new key updates', id: 'task1' },
             { description: 'Watch the daily POWER UP caLL lesson', id: 'task2' },
-            { description: 'Watch bootcamp video lessons', id: 'task3' }
-            { description: 'Complete bootcamp missions', id: 'task4' }
-            { description: 'Help other students in the bootcamp', id: 'task5' }
+            { description: 'Watch bootcamp video lessons', id: 'task3' },
+            { description: 'Complete bootcamp missions', id: 'task4' },
+            { description: 'Help other students in the bootcamp', id: 'task5' },
             { description: '50/50 macebell swings', id: 'task6' }
         ];
 
