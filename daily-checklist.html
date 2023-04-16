@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Checklist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .task {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .task input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .missed {
+            color: red;
+            margin-left: 10px;
+        }
+        .completed {
+            color: green;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="tasks"></div>
+    <script>
+        const tasks = [
+            { description: 'Check announcements channel for new key updates', id: 'task1' },
+            { description: 'Watch the daily POWER UP caLL lesson', id: 'task2' },
+            { description: 'Watch bootcamp video lessons', id: 'task3' },
+            { description: 'Complete bootcamp missions', id: 'task4' },
+            { description: 'Help other students in the bootcamp', id: 'task5' },
+            { description: '50/50 macebell swings', id: 'task6' }
+        ];
+
+        const taskContainer = document.getElementById('tasks');
+        tasks.forEach(task => {
+            const taskDiv = document.createElement('div');
+            taskDiv.classList.add('task');
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = task.id;
+            checkbox.onchange = updateTask;
+            taskDiv.appendChild(checkbox);
+
+            const label = document.createElement('label');
+            label.htmlFor = task.id;
+            label.textContent = task.description;
+            taskDiv.appendChild(label);
+
+            const missed = document.createElement('span');
+            missed.classList.add('missed');
+            taskDiv.appendChild(missed);
+
+            const completed = document.createElement('span');
+            completed.classList.add('completed');
+            taskDiv.appendChild(completed);
+
+            taskContainer.appendChild(taskDiv);
+        });
+
+        function updateTask() {
+            const taskId = this.id;
+            const isChecked = this.checked;
+            const storageKey = isChecked ? 'completed' : 'missed';
+            const count = localStorage.getItem(`${storageKey}_${taskId}`);
+            localStorage.setItem(`${storageKey}_${taskId}`, count ? parseInt(count) + 1 : 1);
+            renderTaskStats();
+        }
+
+        function resetChecklist() {
+            tasks.forEach(task => {
+                const checkbox = document.getElementById(task.id);
+                checkbox.checked = false;
+            });
+        }
+
+        function renderTaskStats() {
+            tasks.forEach(task => {
+                const missed = document.querySelector(`#tasks .task input[id="${task.id}"] ~ .missed`);
+                const completed = document.querySelector(`#tasks .task input[id="${task.id}"] ~ .completed`);
+                const missedCount = localStorage.getItem(`missed_${task.id}`) || 0;
+                const completedCount = localStorage.getItem(`completed_${task.id}`) || 0;
+                missed.textContent = `Missed ${missedCount} times`;
+                completed.textContent = `Completed ${completedCount} times`;
+            });
+        }
+
+        function checkResetTime() {
+            const now = new Date();
+            const resetHour = 2;
+            if (now.getHours() === resetHour && now.getMinutes() === 0) {
+                resetChecklist();
+            }
+        }
+
+        setInterval(checkResetTime, 60000); // Check every minute
+        renderTaskStats();
+    </script>
+</body>
+</html>
