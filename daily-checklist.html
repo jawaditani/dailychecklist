@@ -31,12 +31,9 @@
     <div id="tasks"></div>
     <script>
         const tasks = [
-            { description: 'Check announcements channel for new key updates', id: 'task1' },
-            { description: 'Watch the daily POWER UP caLL lesson', id: 'task2' },
-            { description: 'Watch bootcamp video lessons', id: 'task3' },
-            { description: 'Complete bootcamp missions', id: 'task4' },
-            { description: 'Help other students in the bootcamp', id: 'task5' },
-            { description: '50/50 macebell swings', id: 'task6' }
+            { description: 'Task 1', id: 'task1' },
+            { description: 'Task 2', id: 'task2' },
+            { description: 'Task 3', id: 'task3' }
         ];
 
         const taskContainer = document.getElementById('tasks');
@@ -69,17 +66,25 @@
         function updateTask() {
             const taskId = this.id;
             const isChecked = this.checked;
-            const storageKey = isChecked ? 'completed' : 'missed';
-            const count = localStorage.getItem(`${storageKey}_${taskId}`);
-            localStorage.setItem(`${storageKey}_${taskId}`, count ? parseInt(count) + 1 : 1);
+            const completedCount = localStorage.getItem(`completed_${taskId}`);
+            const updatedCount = isChecked ? parseInt(completedCount) + 1 : parseInt(completedCount) - 1;
+
+            if (updatedCount >= 0) {
+                localStorage.setItem(`completed_${taskId}`, updatedCount);
+            }
             renderTaskStats();
         }
 
         function resetChecklist() {
             tasks.forEach(task => {
                 const checkbox = document.getElementById(task.id);
+                if (!checkbox.checked) {
+                    const missedCount = localStorage.getItem(`missed_${task.id}`);
+                    localStorage.setItem(`missed_${task.id}`, missedCount ? parseInt(missedCount) + 1 : 1);
+                }
                 checkbox.checked = false;
             });
+            renderTaskStats();
         }
 
         function renderTaskStats() {
@@ -98,11 +103,11 @@
             const resetHour = 2;
             if (now.getHours() === resetHour && now.getMinutes() === 0) {
                 resetChecklist();
-            }
-        }
+                   }
 
         setInterval(checkResetTime, 60000); // Check every minute
         renderTaskStats();
     </script>
 </body>
 </html>
+
